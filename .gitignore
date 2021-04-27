@@ -14,3 +14,4 @@ __pycache__/
 kijiji_mapper.egg-info/
 .DS_STORE
 .vscode/
+*.html
