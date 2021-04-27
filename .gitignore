@@ -12,3 +12,5 @@ __pycache__/
 *$py.class
 
 kijiji_mapper.egg-info/
+.DS_STORE
+.vscode/

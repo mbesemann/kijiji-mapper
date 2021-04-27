@@ -45,7 +45,7 @@
                 '<h4>' + appartment.title + '</h4>' +
                 '<h5>$' + appartment.price + '</h5>' +
                 '<p><strong>' + appartment.date + '</strong> ' + appartment.description + '</p>' +
-                '<a href="' + appartment.link + '">Link</a>' +
+                '<a target="_blank" href="' + appartment.link + '">Link</a>' +
                 '</div>';
 
             infowindow = new google.maps.InfoWindow();
@@ -61,7 +61,7 @@
     }
     </script>
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key={{ js_api_key }}&signed_in=true&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key={{ js_api_key }}&callback=initMap">
     </script>
   </body>
 </html>
