@@ -11,9 +11,12 @@ API_KEY = SETTINGS['geolocation_api_key']
 JS_API_KEY = SETTINGS['geolocation_js_api_key']
 GOOGLE_MAPS_URL = 'https://maps.googleapis.com/maps/api/geocode/json'
 DEFAULT_PAGES = 10
-DEFAULT_URL_TEMPLATE = (
-    'https://www.kijiji.ca/b-apartments-condos/ottawa/{page}c37l1700185?ll=45.421530%2C-75.697193&address=Ottawa%2C+ON&ad=offering&radius=110.0&price=__700'
-    '185')
+URL = input('Please enter Kijiji URL: ')
+index = URL.rindex('/')
+part1 = URL[:index + 1]
+part2 = URL[index:]
+DEFAULT_URL_TEMPLATE = ('{part1}{page}{part2}')
+#print(DEFAULT_URL_TEMPLATE.format(part1=part1, page='page-3', part2=part2))
 DEFAULT_MAP_CENTER = [45.4214, -75.6919]
 TEMPLATE_NAME = 'template.jinja2'
 FAKE_USER_AGENT = (
@@ -39,13 +42,13 @@ def geolocate(address):
     return [latlong['lat'], latlong['lng']]
 
 def urls(template, pages):
-    yield template.format(page='')
+    yield template.format(part1=part1, page='', part2=part2)
 
     if pages == 1:
         return
 
     for page in range(2, pages + 1):
-        yield(template.format(page='page-{0}/'.format(page)))
+        yield(template.format(part1=part1, page='page-{0}/'.format(page), part2=part2))
 
 def get_details(url):
     # Sleep 3 seconds to not get throttled
@@ -134,8 +137,10 @@ def run():
         print("Processing {url}".format(url=url))
         for appartment in get_posts(url):
             if appartment['price']:
-                if appartment['price'] <= 900:
+                if appartment['price'] <= 1000:
                     appartments.append(appartment)
+                else:
+                    print('Hit price out of range for some reason')
 
     the_map = open('map.html', 'w')
     the_map.write(render_map(json.dumps(appartments)))
