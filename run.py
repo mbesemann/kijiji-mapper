@@ -14,9 +14,8 @@ DEFAULT_PAGES = 10
 URL = input('Please enter Kijiji URL: ')
 index = URL.rindex('/')
 part1 = URL[:index + 1]
-part2 = URL[index:]
+part2 = URL[index + 1:]
 DEFAULT_URL_TEMPLATE = ('{part1}{page}{part2}')
-#print(DEFAULT_URL_TEMPLATE.format(part1=part1, page='page-3', part2=part2))
 DEFAULT_MAP_CENTER = [45.4214, -75.6919]
 TEMPLATE_NAME = 'template.jinja2'
 FAKE_USER_AGENT = (
@@ -46,6 +45,14 @@ def urls(template, pages):
 
     if pages == 1:
         return
+
+    #adjust total # of pages
+    url = template.format(part1=part1, page='/', part2=part2)
+    response = requests.get(url, headers={'User-Agent': FAKE_USER_AGENT})
+    content = response.content
+    soup = BeautifulSoup(content, 'html.parser')
+    last_page = soup.select('div[class=pagination]')[0].find_all('a')[-3].text
+    pages = int(last_page)
 
     for page in range(2, pages + 1):
         yield(template.format(part1=part1, page='page-{0}/'.format(page), part2=part2))
@@ -103,7 +110,7 @@ def get_posts(url):
         title_el = item.find('a', attrs={'class': 'title'})
         title = title_el.text.strip()
         print(title)
-        link = "http://www.kijiji.ca{path}".format(path=title_el.attrs['href'])
+        link = "https://www.kijiji.ca{path}".format(path=title_el.attrs['href'])
         print(link)
         description = item.find('div', attrs={'class': 'description'}).text.strip()
 
@@ -132,15 +139,18 @@ def run():
     template = DEFAULT_URL_TEMPLATE
 
     appartments = []
+    with open('exclusions.json') as f:
+        exclusions = json.load(f)
 
     for url in urls(template, DEFAULT_PAGES):
         print("Processing {url}".format(url=url))
         for appartment in get_posts(url):
-            if appartment['price']:
-                if appartment['price'] <= 1000:
-                    appartments.append(appartment)
-                else:
-                    print('Hit price out of range for some reason')
+            if appartment['link'] not in exclusions:
+                if appartment['price']:
+                    if appartment['price'] <= 1000:
+                        appartments.append(appartment)
+                    else:
+                        print('Hit price out of range for some reason')
 
     the_map = open('map.html', 'w')
     the_map.write(render_map(json.dumps(appartments)))
