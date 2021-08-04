@@ -2,6 +2,7 @@ import json
 import time
 import requests
 import yaml
+import os
 
 from bs4 import BeautifulSoup
 from jinja2 import Template
@@ -155,6 +156,7 @@ def run():
     the_map = open('map.html', 'w')
     the_map.write(render_map(json.dumps(appartments)))
     the_map.close()
+    os.system('mv map.html /var/www/html/')
 
 if __name__ == "__main__":
     run()
