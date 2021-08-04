@@ -14,3 +14,4 @@ kijiji_mapper.egg-info/
 .DS_STORE
 .vscode/
 *.html
+exclusions.json

@@ -16,7 +16,7 @@ index = URL.rindex('/')
 part1 = URL[:index + 1]
 part2 = URL[index + 1:]
 DEFAULT_URL_TEMPLATE = ('{part1}{page}{part2}')
-DEFAULT_MAP_CENTER = [45.4214, -75.6919]
+DEFAULT_MAP_CENTER = [45.440294, -75.732922]
 TEMPLATE_NAME = 'template.jinja2'
 FAKE_USER_AGENT = (
     'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like '
