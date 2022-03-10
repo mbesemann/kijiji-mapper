@@ -150,7 +150,6 @@ def run():
         for appartment in get_posts(url):
             if appartment['link'] not in exclusions:
                 if appartment['price']:
-<<<<<<< HEAD
                     if appartment['price'] <= PRICE:
                         appartments.append(appartment)
                     else:
