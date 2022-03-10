@@ -7,7 +7,7 @@ import os
 from bs4 import BeautifulSoup
 from jinja2 import Template
 
-SETTINGS = yaml.load(open('secrets.yml', 'r').read())
+SETTINGS = yaml.safe_load(open('secrets.yml', 'r').read())
 API_KEY = SETTINGS['geolocation_api_key']
 JS_API_KEY = SETTINGS['geolocation_js_api_key']
 GOOGLE_MAPS_URL = 'https://maps.googleapis.com/maps/api/geocode/json'
@@ -148,7 +148,7 @@ def run():
         for appartment in get_posts(url):
             if appartment['link'] not in exclusions:
                 if appartment['price']:
-                    if appartment['price'] <= 1000:
+                    if appartment['price'] <= 1500:
                         appartments.append(appartment)
                     else:
                         print('Hit price out of range for some reason')
