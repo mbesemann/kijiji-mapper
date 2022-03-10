@@ -13,6 +13,8 @@ JS_API_KEY = SETTINGS['geolocation_js_api_key']
 GOOGLE_MAPS_URL = 'https://maps.googleapis.com/maps/api/geocode/json'
 DEFAULT_PAGES = 10
 URL = input('Please enter Kijiji URL: ')
+PRICE = int(input('Please enter max price: '))
+OUTPUT = input('Please enter output filename (default map.html): ') or 'map.html'
 index = URL.rindex('/')
 part1 = URL[:index + 1]
 part2 = URL[index + 1:]
@@ -148,15 +150,15 @@ def run():
         for appartment in get_posts(url):
             if appartment['link'] not in exclusions:
                 if appartment['price']:
-                    if appartment['price'] <= 1000:
+                    if appartment['price'] <= PRICE:
                         appartments.append(appartment)
                     else:
                         print('Hit price out of range for some reason')
 
-    the_map = open('map.html', 'w')
+    the_map = open(OUTPUT, 'w')
     the_map.write(render_map(json.dumps(appartments)))
     the_map.close()
-    os.system('mv map.html /var/www/html/')
+    os.system('mv {} /var/www/html/'.format(OUTPUT))
 
 if __name__ == "__main__":
     run()
