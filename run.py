@@ -19,7 +19,8 @@ index = URL.rindex('/')
 part1 = URL[:index + 1]
 part2 = URL[index + 1:]
 DEFAULT_URL_TEMPLATE = ('{part1}{page}{part2}')
-DEFAULT_MAP_CENTER = [45.440294, -75.732922]
+DEFAULT_MAP_CENTER = [45.440294, -75.732922] #Ottawa
+#DEFAULT_MAP_CENTER = [45.5071015, -73.5961619] #Montreal
 TEMPLATE_NAME = 'template.jinja2'
 FAKE_USER_AGENT = (
     'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like '
@@ -54,7 +55,11 @@ def urls(template, pages):
     response = requests.get(url, headers={'User-Agent': FAKE_USER_AGENT})
     content = response.content
     soup = BeautifulSoup(content, 'html.parser')
-    last_page = soup.select('div[class=pagination]')[0].find_all('a')[-3].text
+    all_pages = soup.select('div[class=pagination]')[0].find_all('a')
+    if len(all_pages) > 1:
+        last_page = all_pages[-3].text
+    else:
+        last_page = 1
     pages = int(last_page)
 
     for page in range(2, pages + 1):
